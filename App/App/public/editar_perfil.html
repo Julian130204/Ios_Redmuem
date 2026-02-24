@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editar Perfil - REDMUEM</title>
+
+<style>
+:root{
+  --rose:#EE9B81;
+  --orange:#FF7A33;
+  --orange-soft:#FF9F68;
+  --bg:#FFF3EE;
+  --white:#fff;
+  --text:#333;
+  --shadow:0 6px 20px rgba(0,0,0,0.12);
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui,sans-serif;
+}
+
+/* 👉 Nuevo: bajar todo el contenido para evitar choque */
+body{
+  background:linear-gradient(to bottom,var(--bg),#fff);
+  overflow-x:hidden;
+  padding-top: calc(env(safe-area-inset-top) + 5px); /* ↓ 5mm aprox */
+}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  padding:20px;
+  color:white;
+  font-weight:900;
+  font-size:22px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+/* BOTÓN REGRESAR */
+.btn-regresar{
+  width:90%;
+  margin:18px auto 0;
+  display:block;
+  padding:12px;
+  background:var(--orange-soft);
+  color:white;
+  border:none;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:700;
+  box-shadow:0 5px 14px rgba(0,0,0,0.15);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn-regresar:hover{
+  transform:scale(1.03);
+  background:var(--orange);
+}
+
+.btn-regresar:active{
+  transform:scale(.96);
+}
+
+/* FORMULARIO */
+.form-container{
+  padding:20px;
+  margin:18px;
+  background:white;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+}
+
+.input-group{
+  margin-bottom:16px;
+}
+
+.label{
+  font-weight:700;
+  margin-bottom:6px;
+  display:block;
+  color:#444;
+}
+
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:2px solid #eee;
+  font-size:15px;
+  outline:none;
+  transition:.2s;
+}
+
+.input:focus{
+  border-color:var(--rose);
+}
+
+/* FOTO PERFIL */
+.photo-box{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.photo-preview{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--rose);
+  margin-bottom:12px;
+}
+
+.file-btn{
+  padding:8px 14px;
+  background:var(--orange);
+  color:white;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+/* LOGO EMPRESA */
+.logo-preview{
+  width:100%;
+  max-height:160px;
+  border-radius:16px;
+  object-fit:contain;
+  background:#fafafa;
+  padding:10px;
+  margin-bottom:12px;
+  border:2px solid #eee;
+}
+
+/* GUARDAR */
+.btn-guardar{
+  width:100%;
+  padding:14px;
+  background:var(--rose);
+  color:white;
+  border:none;
+  border-radius:18px;
+  font-size:17px;
+  font-weight:700;
+  margin-top:10px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.18);
+  transition:.2s;
+}
+
+.btn-guardar:active{
+  transform:scale(.96);
+}
+
+/* MENSAJE */
+.msg{
+  text-align:center;
+  margin-top:12px;
+  font-weight:700;
+  color:green;
+}
+
+.error{
+  color:red;
+}
+
+@supports(padding: max(0px)) {
+  .header {
+    padding-top: calc(5px + env(safe-area-inset-top) + 5px); /* ↓ +20px extra */
+  }
+  .header-redmuem {
+    padding-top: calc(5px + env(safe-area-inset-top) + 5px);
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">Editar Perfil</div>
+
+<!-- BOTÓN REGRESAR -->
+<button class="btn-regresar" onclick="goBack()">← Regresar a mi perfil</button>
+
+<div class="form-container">
+
+  <!-- FOTO PERFIL -->
+  <div class="photo-box">
+    <img id="fotoPreview" class="photo-preview">
+    <br>
+    <input type="file" id="fotoInput" accept="image/*" class="file-btn">
+  </div>
+
+  <!-- LOGO EMPRESA -->
+  <label class="label">Logo de empresa</label>
+  <img id="logoPreview" class="logo-preview">
+  <input type="file" id="logoInput" accept="image/*" class="file-btn">
+
+  <div class="input-group">
+    <label class="label">Nombre</label>
+    <input id="nombre" class="input" type="text">
+  </div>
+
+  <div class="input-group">
+    <label class="label">Empresa</label>
+    <input id="cargo" class="input" type="text">
+  </div>
+
+  <div class="input-group">
+    <label class="label">Capitulo</label>
+    <input id="area" class="input" type="text">
+  </div>
+
+  <div class="input-group">
+    <label class="label">Descripción personal</label>
+    <textarea id="descripcion" class="input" rows="4"></textarea>
+  </div>
+
+<div class="input-group">
+  <label class="label">Descripción de la empresa</label>
+  <textarea id="descripcion_empresa" class="input" rows="4"></textarea>
+</div>
+
+  <div class="input-group">
+    <label class="label">Facebook</label>
+    <input id="facebook" class="input" type="text">
+  </div>
+
+  <div class="input-group">
+    <label class="label">Instagram</label>
+    <input id="instagram" class="input" type="text">
+  </div>
+
+  <div class="input-group">
+    <label class="label">TikTok</label>
+    <input id="tiktok" class="input" type="text">
+  </div>
+
+  <div class="input-group">
+    <label class="label">WhatsApp</label>
+    <input id="whatsapp" class="input" type="text">
+  </div>
+
+  <button class="btn-guardar" onclick="guardarCambios()">Guardar cambios</button>
+  <div id="msg" class="msg"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+const client = supabase.createClient(
+  "https://qfcffqpfjvbrdkcldybb.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmY2ZmcXBmanZicmRrY2xkeWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzg4NzUsImV4cCI6MjA3ODYxNDg3NX0.G5QfI3yFvOy-h8bOI3VuQFS7PoqAoY97cmqOVcaKVmA"
+);
+
+/* BOTÓN REGRESAR */
+function goBack(){
+  window.location.href = "perfil.html";
+}
+
+/* CARGAR DATOS DEL USUARIO */
+const user = JSON.parse(localStorage.getItem("usuario"));
+if(!user) window.location.href = "index.html";
+
+document.getElementById("fotoPreview").src = user.imagen_perfil || "https://cdn-icons-png.flaticon.com/512/3177/3177440.png";
+document.getElementById("logoPreview").src = user.empresa_logo || "https://picsum.photos/400";
+
+document.getElementById("nombre").value = user.nombre;
+document.getElementById("cargo").value = user.cargo || "";
+document.getElementById("area").value = user.area || "";
+document.getElementById("descripcion").value = user.descripcion || "";
+document.getElementById("descripcion_empresa").value = user.descripcion_empresa || "";
+
+document.getElementById("facebook").value = user.facebook || "";
+document.getElementById("instagram").value = user.instagram || "";
+document.getElementById("tiktok").value = user.tiktok || "";
+document.getElementById("whatsapp").value = user.whatsapp || "";
+
+/* FOTO PERFIL */
+let nuevaFoto = null;
+fotoInput.onchange = e=>{
+  nuevaFoto = e.target.files[0];
+  fotoPreview.src = URL.createObjectURL(nuevaFoto);
+};
+
+/* LOGO */
+let nuevoLogo = null;
+logoInput.onchange = e=>{
+  nuevoLogo = e.target.files[0];
+  logoPreview.src = URL.createObjectURL(nuevoLogo);
+};
+
+/* GUARDAR CAMBIOS */
+async function guardarCambios(){
+  let msg = document.getElementById("msg");
+  msg.textContent = "Guardando...";
+
+  let fotoURL = user.imagen_perfil;
+  let logoURL = user.empresa_logo;
+
+  /* SUBIR FOTO PERFIL */
+  if(nuevaFoto){
+    const { data } = await client.storage
+      .from("Fotos")
+      .upload(`perfil/${user.id}-${Date.now()}`, nuevaFoto, { upsert:true });
+
+    if(data){
+      fotoURL = client.storage.from("Fotos").getPublicUrl(data.path).data.publicUrl;
+    }
+  }
+
+  /* SUBIR LOGO */
+  if(nuevoLogo){
+    const { data } = await client.storage
+      .from("Fotos")
+      .upload(`logos/${user.id}-${Date.now()}`, nuevoLogo, { upsert:true });
+
+    if(data){
+      logoURL = client.storage.from("Fotos").getPublicUrl(data.path).data.publicUrl;
+    }
+  }
+
+  /* ACTUALIZAR BD */
+  const { error } = await client
+    .from("usuarios")
+    .update({
+      nombre: nombre.value,
+      cargo: cargo.value,
+      area: area.value,
+      descripcion: descripcion.value,
+      descripcion_empresa: descripcion_empresa.value,
+      facebook: facebook.value,
+      instagram: instagram.value,
+      tiktok: tiktok.value,
+      whatsapp: whatsapp.value,
+      imagen_perfil: fotoURL,
+      empresa_logo: logoURL
+    })
+    .eq("id", user.id);
+
+  if(error){
+    msg.textContent = "Error al guardar";
+    msg.classList.add("error");
+    return;
+  }
+
+  /* ACTUALIZAR LOCALSTORAGE */
+  const actualizado = {
+    ...user,
+    nombre: nombre.value,
+    cargo: cargo.value,
+    area: area.value,
+    descripcion: descripcion.value,
+    facebook: facebook.value,
+    instagram: instagram.value,
+    tiktok: tiktok.value,
+    whatsapp: whatsapp.value,
+    imagen_perfil: fotoURL,
+    empresa_logo: logoURL
+  };
+
+  localStorage.setItem("usuario", JSON.stringify(actualizado));
+
+  msg.textContent = "Guardado correctamente ✔";
+}
+
+</script>
+
+</body>
+</html>

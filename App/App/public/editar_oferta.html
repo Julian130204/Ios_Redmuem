@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Editar oferta - REDMUEM</title>
+
+<style>
+:root{
+  --rose:#EE9B81;
+  --orange:#FF7A33;
+  --orange-soft:#FF9F68;
+  --orange-light:#FFD6C3;
+  --bg:#FFF3EE;
+  --white:#fff;
+  --text:#333;
+  --shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui,sans-serif;
+}
+
+body{
+  background:var(--bg);
+  overflow-x:hidden;
+}
+
+/* ---------------- HEADER ---------------- */
+.header{
+  width:100%;
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  padding:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:white;
+  box-shadow:var(--shadow);
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
+}
+
+.header-title{
+  font-size:22px;
+  font-weight:900;
+}
+
+.menu-btn{
+  font-size:32px;
+  cursor:pointer;
+}
+
+/* ----------- BOTÓN REGRESAR ----------- */
+.btn-regresar{
+  width:90%;
+  margin:20px auto 0;
+  padding:12px;
+  background:var(--orange-soft);
+  color:white;
+  border:none;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:700;
+  box-shadow:0 6px 16px rgba(0,0,0,0.12);
+  cursor:pointer;
+  display:block;
+  text-align:center;
+  transition:.2s;
+}
+
+.btn-regresar:hover{
+  transform:scale(1.03);
+  background:var(--orange);
+}
+
+/* ===========================
+      SIDEBAR PREMIUM FINAL
+=========================== */
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-280px;
+  width:260px;
+  height:100vh;
+
+  background:linear-gradient(135deg, #ffffff 20%, #ffe0d6 100%);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  display:flex;
+  flex-direction:column;
+
+  box-shadow:12px 0 40px rgba(0,0,0,0.18);
+  border-top-right-radius:22px;
+  border-bottom-right-radius:22px;
+
+  transition:0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index:100;
+  overflow:hidden; /* IMPORTANTÍSIMO */
+}
+
+.side-menu.open{
+  left:0;
+}
+
+/* ===========================
+      BARRA SUPERIOR REDMUEM
+=========================== */
+.sidebar-top{
+  width:100%;
+  padding:20px 10px;
+  text-align:center;
+  font-size:20px;
+  font-weight:900;
+  color:white;
+
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  border-bottom-left-radius:12px;
+  border-bottom-right-radius:12px;
+
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ===========================
+      BOTONES
+=========================== */
+.menu-item{
+  padding:16px 14px;
+  margin:14px 16px 0 16px;
+
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+  font-size:17px;
+  font-weight:700;
+  cursor:pointer;
+
+  border-radius:18px;
+  letter-spacing:0.3px;
+
+  background:linear-gradient(135deg, #FFC7A0, #FF8A4C);
+  color:white;
+
+  border:1px solid rgba(255,255,255,0.5);
+
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  transition:0.25s ease;
+}
+
+.menu-item:hover{
+  background:linear-gradient(135deg, #FF7A33, #EE4D25);
+  transform:translateX(6px);
+  box-shadow:0 6px 18px rgba(0,0,0,0.22);
+}
+
+.menu-item:active{
+  transform:scale(0.94);
+}
+
+/* ===========================
+   LOGOUT ROJO INTENSO
+=========================== */
+.menu-item.logout{
+  background:linear-gradient(135deg, #FF5252, #D60000);
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:0 4px 14px rgba(255,0,0,0.35);
+  margin-top:20px;
+}
+
+.menu-item.logout:hover{
+  background:linear-gradient(135deg, #ff1c1c, #a10000);
+  transform:translateX(6px);
+}
+
+.menu-item.logout:active{
+  transform:scale(0.94);
+}
+
+/* ===========================
+      COPYRIGHT PEGADO AL FONDO
+=========================== */
+.sidebar-copy{
+  margin-top:auto;   /* MAGIA: lo manda al fondo */
+  padding:20px 10px;
+  text-align:center;
+  font-size:12px;
+  opacity:0.75;
+  color:#444;
+}
+
+/* ---------------- FORMULARIO ---------------- */
+.form-container{
+  background:white;
+  margin:20px;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:var(--shadow);
+}
+
+.label{
+  font-size:15px;
+  font-weight:600;
+  margin-top:16px;
+  display:block;
+}
+
+input, textarea{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border-radius:12px;
+  border:1px solid var(--orange-light);
+  background:#fff8f5;
+  font-size:15px;
+}
+
+textarea{
+  resize:none;
+  height:110px;
+}
+
+input:focus, textarea:focus{
+  border-color:var(--rose);
+  box-shadow:0 0 0 2px rgba(238,155,129,0.25);
+}
+
+.preview-img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-top:10px;
+}
+
+/* Botón guardar */
+.btn-guardar{
+  width:100%;
+  margin-top:22px;
+  padding:14px;
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  color:white;
+  border:none;
+  border-radius:16px;
+  font-size:17px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+}
+
+.btn-delete{
+  width:100%;
+  margin-top:14px;
+  padding:14px;
+  background:#ff4444;
+  color:white;
+  border:none;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding-top: env(safe-area-inset-top);
+  }
+  .header {
+    padding-top: calc(20px + env(safe-area-inset-top));
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div id="sideMenu" class="side-menu">
+
+  <!-- BARRA SUPERIOR -->
+  <div class="sidebar-top">REDMUEM</div>
+
+  <!-- TUS BOTONES NORMALES -->
+  <div class="menu-item" onclick="goTo('inicio.html')">🏠 Inicio</div>
+  <div class="menu-item" onclick="goTo('ofertas.html')">🎁 Ofertas</div>
+  <div class="menu-item" onclick="goTo('socias.html')">👥 Socias</div>
+  <div class="menu-item" onclick="goTo('convenios.html')">🤝 Convenios y Alianzas</div>
+  <div class="menu-item" onclick="goTo('perfil.html')">👤 Perfil</div>
+
+  <!-- LOGOUT ROJO -->
+  <div class="menu-item logout" onclick="logout()">🚪 Cerrar sesión</div>
+
+  <!-- COPYRIGHT AL FONDO -->
+  <div class="sidebar-copy">
+    © 2025 REDMUEM<br>
+    Todos los derechos reservados
+  </div>
+
+</div>
+
+
+<!-- ================= CONTENIDO ================= -->
+<div id="content">
+
+  <div class="header">
+    <div class="header-title">Editar oferta</div>
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  </div>
+
+  <!-- BOTÓN DE REGRESAR -->
+  <button class="btn-regresar" onclick="goBack()">← Regresar a ofertas</button>
+
+  <div class="form-container">
+
+    <!-- TÍTULO -->
+    <label class="label">Título</label>
+    <input type="text" id="titulo">
+
+    <!-- DESCRIPCIÓN -->
+    <label class="label">Descripción</label>
+    <textarea id="descripcion"></textarea>
+
+    <!-- FECHA FIN -->
+    <label class="label">Fecha de finalización</label>
+    <input type="date" id="fechaFin">
+
+    <!-- IMAGEN ACTUAL -->
+    <label class="label">Imagen actual</label>
+    <img id="preview" class="preview-img">
+
+    <!-- NUEVA IMAGEN -->
+    <label class="label">Cambiar imagen (opcional)</label>
+    <input type="file" id="imagenInput" accept="image/*">
+
+    <button class="btn-guardar" onclick="guardarCambios()">Guardar cambios</button>
+    <button class="btn-delete" onclick="eliminarOferta()">Eliminar oferta</button>
+
+  </div>
+</div>
+
+<!-- ================= JS SUPABASE ================= -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+const client = supabase.createClient(
+  "https://qfcffqpfjvbrdkcldybb.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmY2ZmcXBmanZicmRrY2xkeWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzg4NzUsImV4cCI6MjA3ODYxNDg3NX0.G5QfI3yFvOy-h8bOI3VuQFS7PoqAoY97cmqOVcaKVmA"
+);
+
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if(!usuario) window.location.href = "index.html";
+
+/* ===== OBTENER ID DE LA OFERTA ===== */
+const ofertaID = localStorage.getItem("editarOfertaID");
+if(!ofertaID) goTo("ofertas.html");
+
+/* ========== BOTÓN REGRESAR ========== */
+function goBack(){
+  window.location.href = "ofertas.html";
+}
+
+/* ================= MENU ================= */
+function toggleMenu(){ 
+  sideMenu.classList.toggle("open"); 
+  content.classList.toggle("blur");
+}
+function goTo(p){ window.location.href=p; }
+function logout(){ localStorage.clear(); goTo("index.html"); }
+
+/* ===== CARGAR DATOS ===== */
+async function cargarOferta(){
+
+  const { data: oferta } = await client
+    .from("ofertas")
+    .select("*")
+    .eq("id", ofertaID)
+    .single();
+
+  if(!oferta){
+    alert("No se encontró la oferta.");
+    goTo("ofertas.html");
+    return;
+  }
+
+  // Verificar dueño
+  if(oferta.usuario_id !== usuario.id){
+    alert("No puedes editar esta oferta.");
+    goTo("ofertas.html");
+    return;
+  }
+
+  // Llenar campos
+  titulo.value = oferta.titulo;
+  descripcion.value = oferta.descripcion;
+  fechaFin.value = oferta.fecha_fin.slice(0,10);
+  preview.src = oferta.imagen_url;
+}
+
+cargarOferta();
+
+/* ===== PREVIEW NUEVA IMAGEN ===== */
+imagenInput.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = () => preview.src = reader.result;
+    reader.readAsDataURL(file);
+  }
+});
+
+/* ===== GUARDAR CAMBIOS ===== */
+async function guardarCambios(){
+
+  const tituloValue = titulo.value.trim();
+  const descripcionValue = descripcion.value.trim();
+  const fechaFinValue = fechaFin.value;
+  const nuevaImagen = imagenInput.files[0];
+
+  let imagenURL = preview.src;
+
+  if(nuevaImagen){
+    const nombreArchivo = `oferta_${Date.now()}_${nuevaImagen.name}`;
+
+    const { error: uploadError } = await client.storage
+      .from("Fotos")
+      .upload(`imagenes_ofertas/${nombreArchivo}`, nuevaImagen);
+
+    if(uploadError){
+      alert("Error al subir imagen.");
+      return;
+    }
+
+    imagenURL = 
+    `https://qfcffqpfjvbrdkcldybb.supabase.co/storage/v1/object/public/Fotos/imagenes_ofertas/${nombreArchivo}`;
+  }
+
+  // Actualizar oferta
+  const { error } = await client
+    .from("ofertas")
+    .update({
+      titulo: tituloValue,
+      descripcion: descripcionValue,
+      fecha_fin: fechaFinValue,
+      imagen_url: imagenURL
+    })
+    .eq("id", ofertaID);
+
+  if(error){
+    alert("Error al guardar");
+    return;
+  }
+
+  alert("Oferta actualizada con éxito.");
+  goBack();
+}
+
+/* ===== ELIMINAR OFERTA ===== */
+async function eliminarOferta(){
+
+  if(!confirm("¿Quieres eliminar esta oferta?")) return;
+
+  const { error } = await client
+    .from("ofertas")
+    .delete()
+    .eq("id", ofertaID);
+
+  if(error){
+    alert("Error al eliminar.");
+    return;
+  }
+
+  alert("Oferta eliminada.");
+  goTo("ofertas.html");
+}
+
+</script>
+
+</body>
+</html>
