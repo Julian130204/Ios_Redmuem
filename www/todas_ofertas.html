@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todas las ofertas - REDMUEM</title>
+
+<style>
+:root{
+  --rose:#EE9B81;
+  --orange:#FF7A33;
+  --orange-soft:#FF9F68;
+  --orange-light:#FFD6C3;
+  --bg:#FFF3EE;
+  --white:#fff;
+  --text:#333;
+  --shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui,sans-serif;
+}
+
+/* 👉 Nuevo: bajar todo el contenido para evitar choque */
+body{
+  background:linear-gradient(to bottom,var(--bg),#fff);
+  overflow-x:hidden;
+  padding-top: calc(env(safe-area-inset-top) + 5px); /* ↓ 5mm aprox */
+}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  padding:20px;
+  text-align:center;
+  color:white;
+  font-size:22px;
+  font-weight:900;
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
+  position:relative;
+}
+
+/* BOTÓN REGRESAR */
+.back-btn{
+  position:absolute;
+  left:15px;
+  top:15px;
+  background:white;
+  color:var(--orange);
+  padding:6px 12px;
+  border-radius:12px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+}
+
+/* BUSCADOR */
+.search-box{
+  padding:16px;
+}
+.search-input{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+/* FILTROS */
+.filtros{
+  display:flex;
+  gap:8px;
+  padding:0 16px;
+  margin-top:10px;
+}
+.filtro-btn{
+  flex:1;
+  padding:10px;
+  border-radius:14px;
+  border:none;
+  background:white;
+  box-shadow:var(--shadow);
+  font-weight:700;
+  cursor:pointer;
+}
+.filtro-btn.active{
+  background:var(--orange);
+  color:white;
+}
+
+/* TARJETAS */
+.oferta-card{
+  background:white;
+  margin:16px;
+  padding:10px;
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+}
+.oferta-img{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  border-radius:16px;
+}
+.oferta-title{ font-size:18px; font-weight:800; margin-top:10px; }
+.oferta-desc{ color:#666; margin-top:6px; }
+.oferta-fecha{ margin-top:6px; font-size:13px; color:#777; }
+
+.user-info{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:8px;
+}
+.avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--rose);
+}
+
+@supports(padding: max(0px)) {
+  .header {
+    padding-top: calc(5px + env(safe-area-inset-top) + 5px); /* ↓ +20px extra */
+  }
+  .header-redmuem {
+    padding-top: calc(5px + env(safe-area-inset-top) + 5px);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  Todas las ofertas
+  <button class="back-btn" onclick="history.back()">←</button>
+</div>
+
+<!-- BUSCADOR -->
+<div class="search-box">
+  <input id="buscar" class="search-input" type="text" placeholder="Buscar...">
+</div>
+
+<!-- FILTROS -->
+<div class="filtros">
+  <button id="fNuevas" class="filtro-btn active">Nuevas</button>
+  <button id="fCaducar" class="filtro-btn">Próximas</button>
+  <button id="fRandom" class="filtro-btn">Llamativas</button>
+</div>
+
+<div id="contenedor"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+const client = supabase.createClient(
+  "https://qfcffqpfjvbrdkcldybb.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmY2ZmcXBmanZicmRrY2xkeWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzg4NzUsImV4cCI6MjA3ODYxNDg3NX0.G5QfI3yFvOy-h8bOI3VuQFS7PoqAoY97cmqOVcaKVmA"
+);
+
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if(!usuario) location.href = "index.html";
+
+let ofertas = [];
+
+/* ===============================
+      CARGAR TODAS
+================================*/
+async function cargar(){
+
+  const { data } = await client
+    .from("ofertas")
+    .select("*, usuarios(nombre, imagen_perfil)")
+    .order("fecha_creada", { ascending:false });
+
+  ofertas = data;
+  render(ofertas);
+}
+
+cargar();
+
+/* ===============================
+      RENDER TARJETAS
+================================*/
+function render(arr){
+  const cont = document.getElementById("contenedor");
+  cont.innerHTML = "";
+
+  arr.forEach(o => {
+    cont.innerHTML += `
+      <div class="oferta-card" onclick="ver('${o.id}')">
+        <img class="oferta-img" src="${o.imagen_url}">
+        <div class="user-info">
+          <img class="avatar" src="${o.usuarios?.imagen_perfil || 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'}">
+          <b>${o.usuarios?.nombre}</b>
+        </div>
+
+        <div class="oferta-title">${o.titulo}</div>
+        <div class="oferta-desc">${o.descripcion}</div>
+        <div class="oferta-fecha">Vence: ${new Date(o.fecha_fin).toLocaleDateString()}</div>
+      </div>
+    `;
+  });
+}
+
+function ver(id){
+  localStorage.setItem("detalleOfertaID", id);
+  location.href = "oferta_detalle.html";
+}
+
+/* ===============================
+      BUSCADOR
+================================*/
+document.getElementById("buscar").oninput = e => {
+  const t = e.target.value.toLowerCase();
+  const filtradas = ofertas.filter(o => 
+    o.titulo.toLowerCase().includes(t) ||
+    o.descripcion.toLowerCase().includes(t)
+  );
+  render(filtradas);
+}
+
+/* ===============================
+      FILTROS
+================================*/
+document.getElementById("fNuevas").onclick = ()=>{
+  activar("fNuevas");
+  render([...ofertas]);
+}
+
+document.getElementById("fCaducar").onclick = ()=>{
+  activar("fCaducar");
+  const cad = [...ofertas].sort((a,b)=> new Date(a.fecha_fin)-new Date(b.fecha_fin));
+  render(cad);
+}
+
+document.getElementById("fRandom").onclick = ()=>{
+  activar("fRandom");
+  const rnd = [...ofertas].sort(()=>Math.random()-0.5);
+  render(rnd);
+}
+
+function activar(id){
+  document.querySelectorAll(".filtro-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+</script>
+
+</body>
+</html>

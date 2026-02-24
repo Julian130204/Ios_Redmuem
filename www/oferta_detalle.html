@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detalle de Oferta - REDMUEM</title>
+
+<style>
+:root{
+  --rose:#EE9B81;
+  --orange:#FF7A33;
+  --orange-soft:#FF9F68;
+  --bg:#FFF3EE;
+  --white:#fff;
+  --text:#333;
+  --shadow:0 6px 20px rgba(0,0,0,0.13);
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui,sans-serif;
+}
+
+/* 👉 Nuevo: bajar todo el contenido para evitar choque */
+body{
+  background:linear-gradient(to bottom,var(--bg),#fff);
+  overflow-x:hidden;
+  padding-top: calc(env(safe-area-inset-top) + 5px); /* ↓ 5mm aprox */
+}
+
+/* ENCABEZADO */
+.header{
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  padding:22px;
+  text-align:center;
+  font-size:20px;
+  color:white;
+  font-weight:900;
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
+  position:sticky;
+  top:0;
+  box-shadow:var(--shadow);
+}
+
+.btn-back{
+  position:absolute;
+  left:16px;
+  top:18px;
+  font-size:26px;
+  color:white;
+  cursor:pointer;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.container{
+  padding:20px;
+}
+
+/* IMAGEN PRINCIPAL */
+.img-main{
+  width:100%;
+  height:250px;
+  border-radius:20px;
+  object-fit:cover;
+  background:#ddd;
+  box-shadow:var(--shadow);
+}
+
+/* TARJETA DE INFORMACIÓN */
+.card{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-top:20px;
+}
+
+/* TÍTULO */
+.titulo{
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:10px;
+  color:#222;
+}
+
+/* DESCRIPCIÓN */
+.desc{
+  color:#444;
+  font-size:16px;
+  margin-bottom:10px;
+  line-height:1.4;
+}
+
+/* USUARIO */
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.avatar{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--rose);
+}
+
+.user-name{
+  font-size:17px;
+  font-weight:800;
+  color:#222;
+}
+
+.user-phone{
+  font-size:14px;
+  color:#666;
+}
+
+/* FECHA */
+.fecha{
+  margin-top:5px;
+  font-weight:700;
+  color:var(--orange);
+}
+
+/* BOTONES */
+.btn-wsp{
+  width:100%;
+  padding:15px;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:white;
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  margin-top:20px;
+  cursor:pointer;
+}
+
+.btn-share{
+  width:100%;
+  padding:15px;
+  background:linear-gradient(135deg,var(--rose),var(--orange));
+  color:white;
+  text-align:center;
+  font-size:16px;
+  font-weight:700;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  margin-top:14px;
+  cursor:pointer;
+}
+
+@supports(padding: max(0px)) {
+  .header {
+    padding-top: calc(5px + env(safe-area-inset-top) + 5px); /* ↓ +20px extra */
+  }
+  .header-redmuem {
+    padding-top: calc(5px + env(safe-area-inset-top) + 5px);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <span class="btn-back" onclick="goBack()">←</span>
+  Detalle de Oferta
+</div>
+
+<div class="container">
+
+  <img id="imgMain" class="img-main" src="">
+
+  <div class="card">
+
+    <div id="titulo" class="titulo"></div>
+
+    <div id="desc" class="desc"></div>
+
+    <div class="user-box">
+      <img id="avatar" class="avatar" src="">
+      <div>
+        <div id="userName" class="user-name"></div>
+        <div id="userPhone" class="user-phone"></div>
+      </div>
+    </div>
+
+    <div class="fecha">
+      Vence el: <span id="fechaFin"></span>
+    </div>
+
+  </div>
+
+  <div id="btnWsp" class="btn-wsp">Contactar por WhatsApp</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const client = supabase.createClient(
+  "https://qfcffqpfjvbrdkcldybb.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmY2ZmcXBmanZicmRrY2xkeWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzg4NzUsImV4cCI6MjA3ODYxNDg3NX0.G5QfI3yFvOy-h8bOI3VuQFS7PoqAoY97cmqOVcaKVmA"
+);
+
+const idOferta = localStorage.getItem("detalleOfertaID");
+if(!idOferta) window.location.href="ofertas.html";
+
+/* Cargar datos reales */
+async function cargarDetalle(){
+
+  // 1. Cargar oferta
+  const { data: oferta } = await client
+    .from("ofertas")
+    .select("*")
+    .eq("id", idOferta)
+    .single();
+
+  if(!oferta){
+    alert("Oferta no encontrada");
+    return;
+  }
+
+  // 2. Cargar usuario
+  const { data: usuario } = await client
+    .from("usuarios")
+    .select("*")
+    .eq("id", oferta.usuario_id)
+    .single();
+
+  // Mostrar datos
+  document.getElementById("imgMain").src = oferta.imagen_url || "https://picsum.photos/500";
+  document.getElementById("titulo").innerText = oferta.titulo;
+  document.getElementById("desc").innerText = oferta.descripcion;
+  document.getElementById("fechaFin").innerText = new Date(oferta.fecha_fin).toLocaleDateString();
+
+  document.getElementById("avatar").src = usuario?.imagen_perfil || "https://cdn-icons-png.flaticon.com/512/3177/3177440.png";
+  document.getElementById("userName").innerText = usuario?.nombre || "Sin nombre";
+
+  /* 🔥 MOSTRAR WHATSAPP REAL */
+  document.getElementById("userPhone").innerText =
+    usuario?.whatsapp ? "📱 " + usuario.whatsapp : "Sin número";
+
+  /* 🔥 BOTÓN WHATSAPP FUNCIONAL */
+  const phone = usuario?.whatsapp || "";
+
+  document.getElementById("btnWsp").onclick = () => {
+    if(!phone){
+      alert("Este usuario no tiene WhatsApp registrado.");
+      return;
+    }
+
+    const mensaje = encodeURIComponent(`Hola vi tu oferta "${oferta.titulo}" en la aplicación REDMUEM y me gustaría más información.`);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`Hola vi tu oferta "${oferta.titulo}" en la aplicación REDMUEM y me gustaría más información.`)}`, "_blank");
+  };
+}
+
+function goBack(){ window.history.back(); }
+
+
+
+cargarDetalle();
+</script>
+
+</body>
+</html>
