@@ -1,0 +1,9 @@
+{
+	"appId": "com.redmuem.app",
+	"appName": "redmuem_app",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "http"
+	},
+	"packageClassList": []
+}
